@@ -1,0 +1,27 @@
+[tasks.default]
+alias = "custom-default"
+
+[tasks.custom-default]
+run_task = {name = ["build_armv6", "make_folder"]}
+
+[tasks.make_folder]
+script_runner = "bash"
+script = [
+"#!/bin/bash",
+"rm -r  ${CARGO_MAKE_WORKING_DIRECTORY}/hack_folder",
+"mkdir ${CARGO_MAKE_WORKING_DIRECTORY}/hack_folder",
+"cp ${CARGO_MAKE_WORKING_DIRECTORY}/target/arm-unknown-linux-gnueabihf/release/rostigare hack_folder/",
+"cp ${CARGO_MAKE_WORKING_DIRECTORY}/start.sh hack_folder/",
+"cp ${CARGO_MAKE_WORKING_DIRECTORY}/login.sh hack_folder/",
+"cp ${CARGO_MAKE_WORKING_DIRECTORY}/dumpexec.sh hack_folder/",
+"cp ${CARGO_MAKE_WORKING_DIRECTORY}/remove_worm.sh hack_folder/",
+"cp ${CARGO_MAKE_WORKING_DIRECTORY}/logoff.sh hack_folder/"
+]
+
+[tasks.build_armv6]
+command = "cargo"
+args = ["build", "--release", "--target", "arm-unknown-linux-gnueabihf"]
+dependencies = ["build"]
+
+[env]
+RUSTFLAGS='-C link-args=-s -C opt-level=z -C lto'
